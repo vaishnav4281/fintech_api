@@ -1,0 +1,38 @@
+TITLE: FINANCE DASHBOARD API - ASSIGNMENT SUBMISSION NOTES
+
+--- PART 1: TECHNICAL DECISIONS & TRADE-OFFS ---
+
+1. CORE FRAMEWORK (FastAPI):
+I chose FastAPI due to its superior performance and native support for modern Pydantic type validation. It ensures the API is self-documenting and strictly type-safe.
+
+2. HYBRID DATABASE STRATEGY:
+The project is built to run on SQLite for local development (enabling instant setup for examiners) while maintaining full compatibility with PostgreSQL (Neon) for production scaling. 
+
+3. SECURITY & ROLE-BASED ACCESS CONTROL (RBAC):
+Implemented a custom Guard system using FastAPI dependencies. This ensures that only Admins can perform sensitive actions, while Analysts and Viewers are restricted to their specific operational scopes.
+
+4. SOFT DELETE PATTERN:
+Financial accuracy requires data persistence. Instead of permanently removing records, I implemented soft-deletion (is_deleted flag). This maintains referential integrity and audit trails.
+
+5. SERVICE LAYER ARCHITECTURE:
+Separated HTTP routing from database logic. This "Separation of Concerns" increases code readability and allows for complex analytical queries (for the Dashboard) to be isolated and optimized.
+
+--- PART 2: ADDITIONAL NOTES ---
+
+A. ROBUST INPUT VALIDATION:
+Beyond basic data types, the system performs logical validation (e.g., preventing negative transaction amounts) to ensure the financial dashboard data remains truthful.
+
+B. LINUX ENVIRONMENT COMPLIANCE:
+The project follows PEP 668 standards for modern Linux environments (like Ubuntu/Debian 23+). I have provided a complete "venv" workflow to prevent package manager conflicts.
+
+C. COMPREHENSIVE DOCUMENTATION:
+I have included three distinct guides:
+- README: General overview and setup.
+- TEST_MD: Step-by-step procedure for examiners.
+- ENDPOINTS_MD: Ready-to-use cURL commands for terminal testing.
+
+D. PRECISION FINANCIAL MATH:
+All monetary fields use the Python 'Decimal' type end-to-end to avoid floating-point inaccuracies commonly found in financial software.
+
+E. SEED DATA COMPATIBILITY:
+Included a robust seeding script that populates the database with 12 months of realistic, chronologically distributed financial data, allowing for immediate visualization of dashboard trends.
