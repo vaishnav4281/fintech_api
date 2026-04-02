@@ -37,13 +37,21 @@ def upgrade() -> None:
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
+<<<<<<< HEAD
             server_default=sa.text("now()"),
+=======
+            server_default=sa.func.now(),
+>>>>>>> fb8f58e (Initialize project with full API features and documentation)
             nullable=False,
         ),
         sa.Column(
             "updated_at",
             sa.DateTime(timezone=True),
+<<<<<<< HEAD
             server_default=sa.text("now()"),
+=======
+            server_default=sa.func.now(),
+>>>>>>> fb8f58e (Initialize project with full API features and documentation)
         ),
         sa.PrimaryKeyConstraint("id"),
     )
@@ -68,13 +76,21 @@ def upgrade() -> None:
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
+<<<<<<< HEAD
             server_default=sa.text("now()"),
+=======
+            server_default=sa.func.now(),
+>>>>>>> fb8f58e (Initialize project with full API features and documentation)
             nullable=False,
         ),
         sa.Column(
             "updated_at",
             sa.DateTime(timezone=True),
+<<<<<<< HEAD
             server_default=sa.text("now()"),
+=======
+            server_default=sa.func.now(),
+>>>>>>> fb8f58e (Initialize project with full API features and documentation)
         ),
         sa.ForeignKeyConstraint(["created_by"], ["users.id"]),
         sa.PrimaryKeyConstraint("id"),

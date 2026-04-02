@@ -20,6 +20,14 @@ class UserCreate(BaseModel):
         return v.strip()
 
 
+<<<<<<< HEAD
+=======
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str = Field(..., min_length=8, max_length=128)
+
+
+>>>>>>> fb8f58e (Initialize project with full API features and documentation)
 class UserUpdate(BaseModel):
     name: Optional[str] = Field(None, min_length=1, max_length=100)
     email: Optional[EmailStr] = None

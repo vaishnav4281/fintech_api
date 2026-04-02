@@ -13,6 +13,11 @@ venv/
 
 # Test artifacts
 test.db
+<<<<<<< HEAD
+=======
+finance.db
+*.db
+>>>>>>> fb8f58e (Initialize project with full API features and documentation)
 .pytest_cache/
 htmlcov/
 .coverage

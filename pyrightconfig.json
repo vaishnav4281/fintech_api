@@ -1,0 +1,10 @@
+{
+  "venvPath": ".",
+  "venv": "venv",
+  "include": ["app", "alembic", "tests", "scripts", "debug_db.py"],
+  "executionEnvironments": [
+    {
+      "root": "."
+    }
+  ]
+}
