@@ -1,38 +1,33 @@
-TITLE: FINANCE DASHBOARD API - ASSIGNMENT SUBMISSION NOTES
+FINANCE DASHBOARD API - PERSONAL SUBMISSION NOTES
 
---- PART 1: TECHNICAL DECISIONS & TRADE-OFFS ---
+Hello! Below is a quick breakdown of my thought process while building this API. I’ve focused on creating a system that isn’t just functionally complete but actually robust and maintainable in a real-world context.
 
-1. CORE FRAMEWORK (FastAPI):
-I chose FastAPI due to its superior performance and native support for modern Pydantic type validation. It ensures the API is self-documenting and strictly type-safe.
+--- MY REASONING & TECHNICAL DECISIONS ---
 
-2. HYBRID DATABASE STRATEGY:
-The project is built to run on SQLite for local development (enabling instant setup for examiners) while maintaining full compatibility with PostgreSQL (Neon) for production scaling. 
+1. WHY FASTAPI?
+I chose FastAPI because it strikes a perfect balance between developer velocity and actual system performance. The biggest advantage for me was the automatic data validation via Pydantic — it means if someone sends garbage data, the API catches it before it ever touches my database. It also generates the Swagger docs automatically, which I think is a must-have for any clean backend.
 
-3. SECURITY & ROLE-BASED ACCESS CONTROL (RBAC):
-Implemented a custom Guard system using FastAPI dependencies. This ensures that only Admins can perform sensitive actions, while Analysts and Viewers are restricted to their specific operational scopes.
+2. THE "LOCAL VS. PRODUCTION" DATABASE STRATEGY:
+Early on, I realized that requiring a full PostgreSQL/PostGIS setup just to test a submission can be a bit of a headache for the person reviewing it. So, I built a hybrid setup using SQLAlchemy. Locally, it spins up a SQLite database (`finance.db`) instantly. But the code itself is fully PostgreSQL-compatible for when it’s ready to go live on a service like Render or Neon. It's about making the setup as frictionless as possible for you.
 
-4. SOFT DELETE PATTERN:
-Financial accuracy requires data persistence. Instead of permanently removing records, I implemented soft-deletion (is_deleted flag). This maintains referential integrity and audit trails.
+3. SECURITY & ROLE-BASED ACCESS (RBAC):
+I didn't want to just "hide" buttons in a UI; the security has to be in the backend. I implemented a role-guard system where every single endpoint checks the user's role before doing anything. For example, if a "Viewer" tries to manually POST a transaction, the backend will shut that down with a 403 Forbidden before the logic even starts. It’s a "security-first" approach.
 
-5. SERVICE LAYER ARCHITECTURE:
-Separated HTTP routing from database logic. This "Separation of Concerns" increases code readability and allows for complex analytical queries (for the Dashboard) to be isolated and optimized.
+4. SOFT-DELETES (BECAUSE MONEY IS IMPORTANT):
+In a financial app, deleting data permanently is almost always a bad idea. If you delete a transaction, you lose the audit trail. I implemented a soft-delete (`is_deleted` flag) for both users and records. This ensures that even if something is "removed" from the dashboard, the historical data is preserved in the database for auditing purposes.
 
---- PART 2: ADDITIONAL NOTES ---
+5. WHY I USED 'DECIMAL' FOR MONEY:
+Using floats for currency is a classic engineering mistake because of rounding errors (like `0.1 + 0.2` not equaling `0.3`). For this project, I used Python's `Decimal` type and the `Numeric(15,2)` database type to ensure 100% mathematical precision for every cent.
 
-A. ROBUST INPUT VALIDATION:
-Beyond basic data types, the system performs logical validation (e.g., preventing negative transaction amounts) to ensure the financial dashboard data remains truthful.
+--- ADDITIONAL CONTEXT ---
 
-B. LINUX ENVIRONMENT COMPLIANCE:
-The project follows PEP 668 standards for modern Linux environments (like Ubuntu/Debian 23+). I have provided a complete "venv" workflow to prevent package manager conflicts.
+EXPECTED INPUT FAILURES:
+I spent extra time on error handling. If you try to register with a duplicate email, or submit a negative income amount, you won't just get a generic "Error 500." You'll get a specific, human-readable JSON message telling you exactly what went wrong and where.
 
-C. COMPREHENSIVE DOCUMENTATION:
-I have included three distinct guides:
-- README: General overview and setup.
-- TEST_MD: Step-by-step procedure for examiners.
-- ENDPOINTS_MD: Ready-to-use cURL commands for terminal testing.
+USER STATUS (ACTIVE/INACTIVE):
+I added a `status` field for users. This allows an admin to "Deactivate" an account without deleting it — meaning the user is immediately barred from logging in or using their token, but their records stay linked for the dashboard trends.
 
-D. PRECISION FINANCIAL MATH:
-All monetary fields use the Python 'Decimal' type end-to-end to avoid floating-point inaccuracies commonly found in financial software.
+TESTING & DOCUMENTATION:
+I've provided two main guides: `test.md` for a step-by-step review and `endpoints.md` with curl commands. My goal was to make sure that as soon as you clone the repo, you can have the whole thing running and tested in under 2 minutes.
 
-E. SEED DATA COMPATIBILITY:
-Included a robust seeding script that populates the database with 12 months of realistic, chronologically distributed financial data, allowing for immediate visualization of dashboard trends.
+Thank you for taking the time to evaluate my submission!
